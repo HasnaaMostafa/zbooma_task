@@ -9,6 +9,7 @@ import 'package:zbooma_task/core/utils/widgets/buttons/custom_text_button.dart';
 import 'package:zbooma_task/core/utils/widgets/inputs/custom_text_text_field.dart';
 import 'package:zbooma_task/core/utils/widgets/inputs/drop_menu_text_field.dart';
 import 'package:zbooma_task/core/utils/widgets/inputs/phone_number_text_field.dart';
+import 'package:zbooma_task/features/home/presentation/pages/home_view.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
@@ -78,7 +79,17 @@ class RegisterView extends StatelessWidget {
                       controller: TextEditingController(),
                     ),
                     SizedBox(height: 24.h),
-                    CustomElevatedButton(title: "Sign up", onPressed: () {}),
+                    CustomElevatedButton(
+                      title: "Sign up",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => HomeView(),
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: 24.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

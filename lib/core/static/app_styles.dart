@@ -14,7 +14,7 @@ class AppStyles {
     fontWeight: FontWeight.bold,
   );
 
-   static TextStyle bold16White = TextStyle(
+  static TextStyle bold16White = TextStyle(
     color: AppColors.white,
     fontSize: 16.r,
     fontWeight: FontWeight.bold,
@@ -37,6 +37,17 @@ class AppStyles {
     fontSize: 14.r,
     fontWeight: FontWeight.w500,
   );
+   static TextStyle medium12 = TextStyle(
+    color: Color(0xff2F2F2F),
+    fontSize: 12.r,
+    fontWeight: FontWeight.w500,
+  );
+
+   static TextStyle regular12Grey6E = TextStyle(
+    color: AppColors.grey6E,
+    fontSize: 12.r,
+    fontWeight: FontWeight.w400,
+  );
   static TextStyle regular14Grey6E = TextStyle(
     color: AppColors.grey6E,
     fontSize: 14.r,
@@ -46,6 +57,12 @@ class AppStyles {
   static TextStyle regular14Grey7F = TextStyle(
     color: AppColors.grey7F,
     fontSize: 14.r,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle regular16Grey7C = TextStyle(
+    color: AppColors.grey7C,
+    fontSize: 16.r,
     fontWeight: FontWeight.w400,
   );
 }
