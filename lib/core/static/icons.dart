@@ -3,7 +3,7 @@ class AppIcons {
   static const String logo = '$_iconsPath/logo_ic.svg';
   static const String arrowIc = '$_iconsPath/arrow_ic.svg';
   static const String arrowMenuIc = '$_iconsPath/arrow_menu_ic.svg';
-  static const String calenderIc = '$_iconsPath/calender_ic.svg';
+  static const String calenderIc = '$_iconsPath/calendar_ic.svg';
   static const String copyIc = '$_iconsPath/copy_ic.svg';
   static const String dropMenuIc = '$_iconsPath/dropmenu_ic.svg';
   static const String eyeIc = '$_iconsPath/eye_ic.svg';

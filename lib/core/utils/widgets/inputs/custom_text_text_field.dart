@@ -35,6 +35,9 @@ class CustomTextTextField extends StatefulWidget {
     this.isLogin,
     this.isEnabled,
     this.dropSufffix,
+    this.isFilled = false,
+    this.fillColor,
+    this.label,
   });
 
   final String? hintText;
@@ -65,6 +68,9 @@ class CustomTextTextField extends StatefulWidget {
   final bool? isEnabled;
   final bool? isLogin;
   final Widget? dropSufffix;
+  final bool? isFilled;
+  final Color? fillColor;
+  final String? label;
 
   @override
   State<CustomTextTextField> createState() => _CustomTextTextFieldState();
@@ -112,6 +118,10 @@ class _CustomTextTextFieldState extends State<CustomTextTextField> {
               obscureText: _obscureText,
               style: AppStyles.regular14Grey7F,
               decoration: InputDecoration(
+                labelStyle: widget.labelStyle,
+                labelText: widget.label,
+                filled: widget.isFilled,
+                fillColor: widget.fillColor,
                 contentPadding: const EdgeInsets.all(18),
                 suffixIconConstraints:
                     widget.removeSuffix == true
@@ -161,17 +171,8 @@ class _CustomTextTextFieldState extends State<CustomTextTextField> {
                         )),
                 hintText: widget.hintText,
                 hintStyle: widget.hintStyle ?? AppStyles.regular14Grey7F,
-                enabledBorder:
-                    Theme.of(context).brightness == Brightness.light
-                        ? outlineInputBorderTextField()
-                        : OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: AppColors.borderColor),
-                        ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: AppColors.borderColor),
-                ),
+                enabledBorder: outlineInputBorderTextField(),
+                border: outlineInputBorderTextField(),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: AppColors.primary),
@@ -189,7 +190,12 @@ class _CustomTextTextFieldState extends State<CustomTextTextField> {
   OutlineInputBorder outlineInputBorderTextField() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: AppColors.borderColor),
+      borderSide: BorderSide(
+        color:
+            widget.isFilled == true
+                ? Colors.transparent
+                : AppColors.borderColor,
+      ),
     );
   }
 }

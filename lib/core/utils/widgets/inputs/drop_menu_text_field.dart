@@ -37,6 +37,9 @@ class CustomDropdownTextField extends StatefulWidget {
     required this.items,
     this.selectedValue,
     this.onDropdownChanged,
+    this.isFilled = false,
+    this.fillColor,
+    this.labelText,
   });
 
   final String? hintText;
@@ -70,6 +73,9 @@ class CustomDropdownTextField extends StatefulWidget {
   final List<String> items;
   final String? selectedValue;
   final void Function(String?)? onDropdownChanged;
+  final bool? isFilled;
+  final Color? fillColor;
+  final String? labelText;
 
   @override
   State<CustomDropdownTextField> createState() =>
@@ -94,7 +100,7 @@ class _CustomDropdownTextFieldState extends State<CustomDropdownTextField> {
           if (widget.text != null) const SizedBox(height: 15),
           SizedBox(
             child: DropdownButtonFormField<String>(
-              style: AppStyles.regular14Grey7F,
+              style: widget.style ?? AppStyles.regular14Grey7F,
               icon: widget.dropSufffix,
               value: _selectedValue,
 
@@ -110,10 +116,17 @@ class _CustomDropdownTextFieldState extends State<CustomDropdownTextField> {
                   widget.items.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value, style: AppStyles.regular14Grey7F),
+                      child: Text(
+                        value,
+                        style: widget.style ?? AppStyles.regular14Grey7F,
+                      ),
                     );
                   }).toList(),
               decoration: InputDecoration(
+                labelStyle: widget.labelStyle,
+                labelText: widget.labelText,
+                fillColor: widget.fillColor,
+                filled: widget.isFilled,
                 contentPadding: EdgeInsets.symmetric(vertical: 18.h),
                 suffixIconConstraints:
                     widget.removeSuffix == true
@@ -132,17 +145,8 @@ class _CustomDropdownTextFieldState extends State<CustomDropdownTextField> {
                 ),
                 hintText: widget.hintText,
                 hintStyle: widget.hintStyle ?? AppStyles.regular14Grey7F,
-                enabledBorder:
-                    Theme.of(context).brightness == Brightness.light
-                        ? outlineInputBorderTextField()
-                        : OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: AppColors.borderColor),
-                        ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: AppColors.borderColor),
-                ),
+                enabledBorder: outlineInputBorderTextField(),
+                border: outlineInputBorderTextField(),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: AppColors.primary),
@@ -160,7 +164,12 @@ class _CustomDropdownTextFieldState extends State<CustomDropdownTextField> {
   OutlineInputBorder outlineInputBorderTextField() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: AppColors.borderColor),
+      borderSide: BorderSide(
+        color:
+            widget.isFilled == true
+                ? Colors.transparent
+                : AppColors.borderColor,
+      ),
     );
   }
 }
