@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:zbooma_task/core/static/app_assets.dart';
 import 'package:zbooma_task/core/static/icons.dart';
+import 'package:zbooma_task/features/profile/presentation/pages/profile_view.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -17,7 +18,17 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Image.asset(AppImages.appLogo, height: 32.h),
       ),
       actions: [
-        SvgPicture.asset(AppIcons.profileIc),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => ProfileView(),
+              ),
+            );
+          },
+          child: SvgPicture.asset(AppIcons.profileIc),
+        ),
         SizedBox(width: 8.w),
         Padding(
           padding: EdgeInsets.only(right: 12.0.w),
