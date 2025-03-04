@@ -101,6 +101,7 @@ class BuildMainIcon extends StatelessWidget {
         height: 64.h,
         width: 64.w,
         child: FloatingActionButton(
+          elevation: 0,
           heroTag: 'mainFAB',
           onPressed: onPressedAnimate,
           backgroundColor: AppColors.primary,
@@ -176,6 +177,7 @@ class BuildAditionalFABIcon extends StatelessWidget {
                 height: 50.h,
                 width: 50.w,
                 child: FloatingActionButton(
+                  elevation: 0,
                   heroTag: 'additionalFAB_$heroTagSuffix',
                   onPressed: onPressed,
                   mini: true,
