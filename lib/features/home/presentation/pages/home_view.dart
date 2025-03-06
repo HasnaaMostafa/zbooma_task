@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
-import 'package:zbooma_task/features/home/presentation/widgets/animated_fab.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/category_listview.dart';
+import 'package:zbooma_task/features/home/presentation/widgets/fab_icon.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/home_appbar.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/task_item.dart';
 
@@ -13,7 +13,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: AnimatedFAB(),
+      floatingActionButton: FabIcon(),
       appBar: HomeAppBar(),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
