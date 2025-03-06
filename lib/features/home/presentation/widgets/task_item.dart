@@ -48,7 +48,6 @@ class TaskItem extends StatelessWidget {
                       ),
                     ),
                     TaskStatus(),
-                   
                   ],
                 ),
                 SizedBox(height: 4.h),

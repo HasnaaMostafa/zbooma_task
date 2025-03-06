@@ -8,7 +8,8 @@ class CustomTextButton extends StatelessWidget {
     required this.text,
     this.style,
     this.isDisibled,
-    this.widget, this.decoration,
+    this.widget,
+    this.decoration,
   });
 
   final void Function()? onPressed;

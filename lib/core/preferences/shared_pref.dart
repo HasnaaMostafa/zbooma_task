@@ -1,6 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String kToken = 'token';
+const String kRefreshToken = 'refreshToken';
+const String kAccessToken = 'accessToken';
 
 class TaskPreferences {
   final SharedPreferences _preferences;
@@ -18,4 +20,15 @@ class TaskPreferences {
     return _preferences.getString(kToken);
   }
 
+  Future<bool> saveRefreshToken(String token) async {
+    return await _preferences.setString(kRefreshToken, token);
+  }
+
+  Future<bool> deleteRefreshToken() async {
+    return await _preferences.remove(kRefreshToken);
+  }
+
+  String? getRefreshToken() {
+    return _preferences.getString(kRefreshToken);
+  }
 }

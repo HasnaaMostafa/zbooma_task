@@ -27,18 +27,19 @@ class ShimmerImage extends StatelessWidget {
         height: height,
         width: width,
         fit: fit,
-        placeholder: (context, url) => Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            height: height,
-            width: width,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(radius),
+        placeholder:
+            (context, url) => Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                height: height,
+                width: width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(radius),
+                ),
+              ),
             ),
-          ),
-        ),
         errorWidget: (context, url, error) => const Icon(Icons.error),
         fadeInDuration: const Duration(milliseconds: 500),
       ),

@@ -20,13 +20,16 @@ class ShimmerContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
       baseColor: const Color(0xFFE0E0E0), // Light grey for a softer look
-      highlightColor:
-          const Color(0xFFBDBDBD), // Slightly darker grey for contrast
+      highlightColor: const Color(
+        0xFFBDBDBD,
+      ), // Slightly darker grey for contrast
       child: ClipRRect(
-        borderRadius: isRounded
-            ? BorderRadius.circular(
-                radius) // Apply rounding if isRounded is true
-            : BorderRadius.zero, // No rounding if isRounded is false
+        borderRadius:
+            isRounded
+                ? BorderRadius.circular(
+                  radius,
+                ) // Apply rounding if isRounded is true
+                : BorderRadius.zero, // No rounding if isRounded is false
         child: Container(
           height: height,
           width: width,

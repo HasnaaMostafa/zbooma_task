@@ -32,8 +32,10 @@ class CustomIconButton extends StatelessWidget {
         child: Center(
           child: SvgPicture.asset(
             iconAsset,
-            colorFilter:
-                const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+            colorFilter: const ColorFilter.mode(
+              AppColors.white,
+              BlendMode.srcIn,
+            ),
           ),
         ),
       ),

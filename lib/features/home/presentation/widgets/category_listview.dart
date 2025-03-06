@@ -6,7 +6,7 @@ class CategoryListView extends StatefulWidget {
   const CategoryListView({super.key});
 
   static const List<String> titles = [
-   "All",
+    "All",
     "Inpogress",
     "Waiting ",
     "Finished",
@@ -22,13 +22,13 @@ class _CategoryListViewState extends State<CategoryListView> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 16.h,),
+      padding: EdgeInsets.only(bottom: 16.h),
       child: SizedBox(
         height: 40.h,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: CategoryListView.titles.length,
-          separatorBuilder: (context, index) => SizedBox(width: 8,),
+          separatorBuilder: (context, index) => SizedBox(width: 8),
           itemBuilder: (context, index) {
             return CategoryItem(
               title: CategoryListView.titles[index],

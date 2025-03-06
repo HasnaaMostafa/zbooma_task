@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zbooma_task/features/splash/presentation/pages/splash_view.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class ZboomaTask extends StatelessWidget {
   const ZboomaTask({super.key});
 
@@ -13,6 +15,7 @@ class ZboomaTask extends StatelessWidget {
       splitScreenMode: true,
       builder: (_, _) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

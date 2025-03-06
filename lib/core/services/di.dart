@@ -19,5 +19,6 @@ Future<void> initLocator() async {
   //! External
   // sl.registerLazySingleton(() => DioClient(sl()));
   final SharedPreferences sharedPref = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPref);
   sl.registerLazySingleton(() => TaskPreferences(sharedPref));
 }

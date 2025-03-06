@@ -15,7 +15,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: SafeArea(
@@ -42,15 +42,17 @@ class LoginView extends StatelessWidget {
                       isLast: true,
                     ),
                     SizedBox(height: 24.h),
-                    CustomElevatedButton(title: "Sign In", onPressed: () {
-                       Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (BuildContext context) => HomeView(),
-                              ),
-                            );
-                    }),
+                    CustomElevatedButton(
+                      title: "Sign In",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => HomeView(),
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: 24.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
