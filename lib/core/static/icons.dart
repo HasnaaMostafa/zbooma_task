@@ -14,4 +14,6 @@ class AppIcons {
   static const String qrIc = '$_iconsPath/qr_ic.svg';
   static const String uploadImgIc = '$_iconsPath/upload_ic.svg';
   static const String eyeSlashIc = '$_iconsPath/eye_slash_ic.svg';
+  static const String emptyIc = '$_iconsPath/empty_ic.svg';
+
 }

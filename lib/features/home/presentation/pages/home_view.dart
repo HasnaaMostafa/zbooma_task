@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zbooma_task/core/services/di.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
+import 'package:zbooma_task/core/utils/widgets/empty/empty_widget.dart';
 import 'package:zbooma_task/core/utils/widgets/shimmer/loading_widget.dart';
 import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/cubit/task_state.dart';
@@ -40,15 +41,26 @@ class HomeView extends StatelessWidget {
                     ),
                     SizedBox(height: 16.h),
                     CategoryListView(),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: tasks.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return TaskItem(taskModel: tasks[index]);
-                        },
+                    if (state.tasks.isNotEmpty)
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            return Future(() {
+                              context.read<TaskCubit>().getAllTasks();
+                            });
+                          },
+                          child: ListView.builder(
+                            itemCount: tasks.length,
+                            shrinkWrap: true,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return TaskItem(taskModel: tasks[index]);
+                            },
+                          ),
+                        ),
                       ),
-                    ),
+                    if (state.tasks.isEmpty)
+                      Expanded(child: EmptyWidget(title: "No data")),
                   ],
                 );
               } else if (state is TaskGetAllLoading) {
