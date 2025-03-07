@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:zbooma_task/core/function/format_date.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
 import 'package:zbooma_task/core/static/icons.dart';
 import 'package:zbooma_task/core/utils/widgets/inputs/custom_text_text_field.dart';
@@ -19,6 +21,8 @@ class CustomDateTextField extends StatelessWidget {
   final String? hint;
   final String? text;
   final bool? isFilled;
+
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +44,7 @@ class CustomDateTextField extends StatelessWidget {
             lastDate: DateTime(2030),
           );
           if (selectedDate != null) {
-            final formattedDate =
-                "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
-
+            final formattedDate = formatDate(selectedDate.toIso8601String());
             dateController.text = formattedDate;
           }
         },

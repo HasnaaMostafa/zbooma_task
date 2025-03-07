@@ -37,14 +37,16 @@ class _SplashViewState extends State<SplashView>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(seconds: 3), () {
         if (preferences.getToken() != null) {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (BuildContext context) => HomeView()),
+            (route) => false,
           );
         } else {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (BuildContext context) => IntroView()),
+            (route) => false,
           );
         }
       });

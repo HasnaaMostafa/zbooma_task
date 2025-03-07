@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter/foundation.dart';
@@ -57,10 +59,11 @@ class TaskRepoImpl implements TaskRepo {
       return Right(tasks);
     } on Exception catch (e) {
       if (e is DioException) {
-        print(e);
+        log(e.toString());
+        log(e.message??"");
         return Left(ServerFailure.fromDioException(e));
       }
-      print(e);
+      log(e.toString());
       return Left(ServerFailure(e.toString()));
     }
   }

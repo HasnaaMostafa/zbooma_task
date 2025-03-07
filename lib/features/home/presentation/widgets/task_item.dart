@@ -21,7 +21,9 @@ class TaskItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => TaskDetailsView(),
+            builder:
+                (BuildContext context) =>
+                    TaskDetailsView(id: taskModel.id ?? ""),
           ),
         );
       },

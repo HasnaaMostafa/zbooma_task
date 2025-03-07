@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:zbooma_task/core/services/di.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
-import 'package:zbooma_task/core/theme/colors.dart';
+import 'package:zbooma_task/core/utils/widgets/shimmer/loading_widget.dart';
 import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/cubit/task_state.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/category_listview.dart';
@@ -51,14 +50,7 @@ class HomeView extends StatelessWidget {
                   ],
                 );
               } else if (state is TaskGetAllLoading) {
-                return Center(
-                  child: SpinKitWave(
-                    key: const ValueKey('loadingTask'),
-                    color: AppColors.primary,
-                    size: 20,
-                    type: SpinKitWaveType.start,
-                  ),
-                );
+                return CustomLoadingWidget();
               } else if (state is TaskGetAllError) {
                 return Center(child: Text(state.error.toString()));
               } else {
