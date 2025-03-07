@@ -9,12 +9,13 @@ class ProfileItem extends StatelessWidget {
     super.key,
     this.isCopy = false,
     required this.title,
-    required this.subtitle,
+    required this.subtitle, this.onTap,
   });
 
   final bool? isCopy;
   final String title;
   final String subtitle;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,11 @@ class ProfileItem extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                if (isCopy == true) SvgPicture.asset(AppIcons.copyIc),
+                if (isCopy == true)
+                  GestureDetector(
+                    onTap: onTap,
+                    child: SvgPicture.asset(AppIcons.copyIc),
+                  ),
               ],
             ),
           ],

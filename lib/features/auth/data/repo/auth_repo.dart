@@ -46,9 +46,9 @@ class AuthRepoImpl implements AuthRepo {
       }
       final AuthModel loginModel = AuthModel.fromJson(response.data);
 
-      String? token = loginModel.accessToken ?? "";
+      preferences.saveToken(loginModel.accessToken ?? "");
       preferences.saveRefreshToken(loginModel.refreshToken ?? "");
-      print(token);
+      print(loginModel.accessToken ?? "");
       return Right(loginModel);
     } on Exception catch (e) {
       if (e is DioException) {
@@ -93,10 +93,8 @@ class AuthRepoImpl implements AuthRepo {
       }
       final AuthModel registerModel = AuthModel.fromJson(response.data);
 
-      String? token = registerModel.accessToken ?? "";
-      preferences.saveToken(token);
+      preferences.saveToken(registerModel.accessToken ?? "");
       preferences.saveRefreshToken(registerModel.refreshToken ?? "");
-      print(token);
       return Right(registerModel);
     } on Exception catch (e) {
       if (e is DioException) {

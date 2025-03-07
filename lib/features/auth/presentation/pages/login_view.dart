@@ -62,6 +62,7 @@ class _LoginViewState extends State<LoginView> {
                               code = value;
                             });
                           });
+                          print(code);
                         },
                       ),
                       CustomTextTextField(
@@ -100,12 +101,14 @@ class _LoginViewState extends State<LoginView> {
                               isLoading: state is AuthLoading,
                               title: "Sign In",
                               onPressed: () {
+                                print(phoneController.text);
+                                print(code);
                                 if (formKey.currentState!.validate()) {
                                   context.read<AuthCubit>().login(
                                     phone:
                                         code == null
-                                            ? "20${phoneController.text}"
-                                            : phoneController.text,
+                                            ? "+20${phoneController.text}"
+                                            : "+$code${phoneController.text}",
                                     password: passwordContoller.text,
                                   );
                                 }

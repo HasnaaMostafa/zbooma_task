@@ -4,7 +4,7 @@ class AuthModel {
   String? refreshToken;
   String? name;
 
-  AuthModel({this.id, this.accessToken, this.refreshToken,this.name});
+  AuthModel({this.id, this.accessToken, this.refreshToken, this.name});
 
   factory AuthModel.fromJson(Map<String, dynamic> json) => AuthModel(
     id: json['_id'] as String?,
@@ -17,6 +17,6 @@ class AuthModel {
     '_id': id,
     'access_token': accessToken,
     'refresh_token': refreshToken,
-    'displayName': name
+    'displayName': name,
   };
 }

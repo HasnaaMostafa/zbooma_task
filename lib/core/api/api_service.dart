@@ -41,12 +41,8 @@ class ApiServices {
                 if (kDebugMode) {
                   print(response.data);
                 }
-                await preferences.saveToken(
-                  response.data['access_token'],
-                );
-                await preferences.saveRefreshToken(
-                 refreshToken,
-                );
+                await preferences.saveToken(response.data['access_token']);
+                await preferences.saveRefreshToken(refreshToken);
                 // BlocProvider.of<UserCubit>(
                 //   navigatorKey.currentState!.context,
                 // ).getUser(response.data['data']['access_token']);
@@ -83,7 +79,7 @@ class ApiServices {
   }) async {
     dio.options.headers = {
       "lang": lang,
-      "Authorization": token,
+      "Authorization": "Bearer $token",
       "Content-Type": "application/json",
       "accept": "application/json",
     };
@@ -99,7 +95,7 @@ class ApiServices {
     dio.options.headers = {
       "accept": "*/*",
       "lang": lang,
-      "Authorization": token,
+      "Authorization": "Bearer $token",
       "Content-Type": "application/json",
     };
 
@@ -116,7 +112,7 @@ class ApiServices {
   }) async {
     dio.options.headers = {
       "lang": lang,
-      "Authorization": token,
+      "Authorization": "Bearer $token",
       'Content-Type': 'multipart/form-data',
       "Accept": "application/json",
     };
@@ -148,7 +144,7 @@ class ApiServices {
   }) async {
     dio.options.headers = {
       "lang": lang,
-      "Authorization": token,
+      "Authorization": "Bearer $token",
       'Content-Type': 'application/json',
       "accept": "application/json",
     };
