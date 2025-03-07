@@ -7,6 +7,7 @@ import 'package:zbooma_task/core/preferences/shared_pref.dart';
 import 'package:zbooma_task/core/services/di.dart';
 import 'package:zbooma_task/core/utils/widgets/dialogs/flutter_toast.dart';
 import 'package:zbooma_task/features/auth/presentation/pages/login_view.dart';
+import 'package:zbooma_task/features/profile/presentation/cubit/profile_cubit.dart';
 
 class ApiServices {
   static late Dio dio;
@@ -29,23 +30,23 @@ class ApiServices {
             print(e.response?.statusMessage);
           }
           if (e.response?.statusCode == 401 &&
-              e.response.toString().contains("")) {
+              e.response.toString().contains("Unauthorized")) {
             String? refreshToken = preferences.getRefreshToken();
             if (refreshToken != null) {
               try {
-                final response = await ApiServices.postData(
+                final response = await ApiServices.getData(
                   endPoint: EndPoints.refreshToken,
-                  token: refreshToken,
-                  data: {},
+                  query: {"token": refreshToken},
                 );
                 if (kDebugMode) {
                   print(response.data);
                 }
                 await preferences.saveToken(response.data['access_token']);
                 await preferences.saveRefreshToken(refreshToken);
-                // BlocProvider.of<UserCubit>(
-                //   navigatorKey.currentState!.context,
-                // ).getUser(response.data['data']['access_token']);
+
+                ProfileCubit.get(
+                  navigatorKey.currentState!.context,
+                ).getUserData(token: response.data['access_token']);
 
                 return handler.resolve(response);
               } catch (refreshError) {

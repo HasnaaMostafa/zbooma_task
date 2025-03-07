@@ -17,3 +17,17 @@ final class ProfileGetUserDataError extends ProfileState {
 
   ProfileGetUserDataError({required this.error});
 }
+
+final class LogoutLoading extends ProfileState {}
+
+final class LogoutSuccess extends ProfileState {
+  final AuthModel authModel;
+
+  LogoutSuccess({required this.authModel});
+}
+
+final class LogoutError extends ProfileState {
+  final String error;
+
+  LogoutError({required this.error});
+}
