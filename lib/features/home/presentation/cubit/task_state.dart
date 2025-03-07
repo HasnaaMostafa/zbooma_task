@@ -1,0 +1,81 @@
+import 'package:zbooma_task/features/home/data/models/task_model.dart';
+
+abstract class TaskState {}
+
+class TaskInitial extends TaskState {}
+
+class TaskGetAllLoading extends TaskState {}
+
+class TaskGetAllSuccess extends TaskState {
+  final List<TaskModel> tasks;
+  TaskGetAllSuccess(this.tasks);
+}
+
+class TaskGetAllError extends TaskState {
+  final String error;
+  TaskGetAllError({required this.error});
+}
+
+class TaskGetMoreLoading extends TaskState {}
+
+class TaskGetMoreSuccess extends TaskState {
+  final List<TaskModel> tasks;
+  TaskGetMoreSuccess(this.tasks);
+}
+
+class TaskGetMoreError extends TaskState {
+  final String error;
+  TaskGetMoreError({required this.error});
+}
+
+class TaskGetByIdLoading extends TaskState {}
+
+class TaskGetByIdSuccess extends TaskState {
+  final TaskModel task;
+  TaskGetByIdSuccess(this.task);
+}
+
+class TaskGetByIdError extends TaskState {
+  final String error;
+  TaskGetByIdError({required this.error});
+}
+
+class TaskCreateLoading extends TaskState {}
+
+class TaskCreateSuccess extends TaskState {
+  final TaskModel task;
+  TaskCreateSuccess(this.task);
+}
+
+class TaskCreateError extends TaskState {
+  final String error;
+  TaskCreateError({required this.error});
+}
+
+class TaskUpdateLoading extends TaskState {}
+
+class TaskUpdateSuccess extends TaskState {
+  final TaskModel taskModel;
+
+  TaskUpdateSuccess(this.taskModel);
+}
+
+class TaskUpdateError extends TaskState {
+  final String error;
+
+  TaskUpdateError({required this.error});
+}
+
+class TaskDeleteLoading extends TaskState {}
+
+class TaskDeleteSuccess extends TaskState {
+  final String id;
+
+  TaskDeleteSuccess(this.id);
+}
+
+class TaskDeleteError extends TaskState{
+  final String error;
+
+  TaskDeleteError({required this.error});
+}

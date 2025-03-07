@@ -5,4 +5,7 @@ abstract class EndPoints {
   static const refreshToken = "/auth/refresh-token";
   static const logout = "/auth/logout";
   static const profile = "/auth/profile";
+
+  //home
+  static const task =" /todos";
 }

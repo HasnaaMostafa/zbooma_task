@@ -9,7 +9,8 @@ class ProfileItem extends StatelessWidget {
     super.key,
     this.isCopy = false,
     required this.title,
-    required this.subtitle, this.onTap,
+    required this.subtitle,
+    this.onTap,
   });
 
   final bool? isCopy;

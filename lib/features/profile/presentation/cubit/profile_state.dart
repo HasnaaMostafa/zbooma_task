@@ -21,8 +21,6 @@ final class ProfileGetUserDataError extends ProfileState {
 final class LogoutLoading extends ProfileState {}
 
 final class LogoutSuccess extends ProfileState {
-  
-
   LogoutSuccess();
 }
 
