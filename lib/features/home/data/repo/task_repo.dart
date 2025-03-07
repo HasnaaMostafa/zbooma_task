@@ -18,15 +18,13 @@ abstract class TaskRepo {
     required String image,
     required String endDate,
   });
-   Future<Either<Failure, TaskModel>> updateTask({
+  Future<Either<Failure, TaskModel>> updateTask({
     required String id,
     required String title,
     required String desc,
     required String priority,
     required String image,
     required String status,
-    required String userId,
-
   });
   Future<Either<Failure, void>> deleteTask({required String id});
 }
@@ -134,10 +132,11 @@ class TaskRepoImpl implements TaskRepo {
     required String priority,
     required String image,
     required String status,
-    required String userId,
   }) async {
     try {
       String? token = preferences.getToken();
+
+      String? userId = preferences.getUserId();
 
       Map<String, dynamic> data = {
         "image": image,
@@ -145,8 +144,8 @@ class TaskRepoImpl implements TaskRepo {
         "desc": desc,
         "priority": priority,
         "status": status,
-        "user": userId
-};
+        "user": userId,
+      };
 
       var response = await ApiServices.putData(
         endPoint: "${EndPoints.task}/$id",
@@ -190,5 +189,4 @@ class TaskRepoImpl implements TaskRepo {
       return Left(ServerFailure(e.toString()));
     }
   }
-
 }

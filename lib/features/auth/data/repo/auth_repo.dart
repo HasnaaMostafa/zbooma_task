@@ -48,6 +48,8 @@ class AuthRepoImpl implements AuthRepo {
 
       preferences.saveToken(loginModel.accessToken ?? "");
       preferences.saveRefreshToken(loginModel.refreshToken ?? "");
+      preferences.saveUserId(loginModel.id ?? "");
+
       print(loginModel.accessToken ?? "");
       return Right(loginModel);
     } on Exception catch (e) {
@@ -95,6 +97,8 @@ class AuthRepoImpl implements AuthRepo {
 
       preferences.saveToken(registerModel.accessToken ?? "");
       preferences.saveRefreshToken(registerModel.refreshToken ?? "");
+      preferences.saveUserId(registerModel.id ?? "");
+
       return Right(registerModel);
     } on Exception catch (e) {
       if (e is DioException) {

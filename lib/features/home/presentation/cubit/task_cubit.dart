@@ -110,7 +110,6 @@ class TaskCubit extends Cubit<TaskState> {
     required String priority,
     required String image,
     required String status,
-    required String userId,
   }) async {
     emit(TaskUpdateLoading());
 
@@ -121,7 +120,6 @@ class TaskCubit extends Cubit<TaskState> {
       priority: priority,
       image: image,
       status: status,
-      userId: userId,
     );
 
     response.fold(

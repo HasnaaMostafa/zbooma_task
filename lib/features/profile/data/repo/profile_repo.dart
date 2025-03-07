@@ -61,6 +61,7 @@ class ProfileRepoImpl implements ProfileRepo {
       }
       preferences.deleteToken();
       preferences.deleteRefreshToken();
+      preferences.deleteUserId();
       return Right(true);
     } on Exception catch (e) {
       if (e is DioException) {
