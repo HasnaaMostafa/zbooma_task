@@ -11,51 +11,8 @@ import 'package:zbooma_task/features/home/presentation/widgets/fab_icon.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/home_appbar.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/task_item.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  final ScrollController _scrollController = ScrollController();
-  late TaskCubit _taskCubit;
-
-  @override
-  void initState() {
-    super.initState();
-    _taskCubit = TaskCubit(sl());
-
-    // Add scroll listener
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  bool _isLoadingMore = false;
-
-  void _onScroll() {
-    // Check if we're near the bottom (80% of the way down)
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8) {
-      // Load more if not already loading and not at the last page
-      final taskCubit = context.read<TaskCubit>();
-      if (!_isLoadingMore && !taskCubit.isLastPage) {
-        _isLoadingMore = true;
-        taskCubit.loadMoreTasks();
-        // Reset the loading flag after a short delay
-        Future.delayed(Duration(milliseconds: 500), () {
-          _isLoadingMore = false;
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,23 +23,12 @@ class _HomeViewState extends State<HomeView> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
         child: BlocProvider(
-          create: (context) {
-            _taskCubit.getAllTasks();
-            return _taskCubit;
-          },
+          create: (context) => TaskCubit(sl())..getAllTasks(),
           child: BlocConsumer<TaskCubit, TaskState>(
-            listener: (context, state) {
-              // Optional: You can add listener logic here if needed
-            },
+            listener: (context, state) {},
             builder: (context, state) {
-              final taskCubit = context.read<TaskCubit>();
-
-              if (state is TaskGetAllSuccess ||
-                  state is TaskGetMoreSuccess ||
-                  state is TaskGetMoreLoading) {
-                final tasks = taskCubit.tasks;
-                final isLoadingMore = state is TaskGetMoreLoading;
-
+              if (state is TaskGetAllSuccess) {
+                final tasks = state.tasks;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -96,18 +42,9 @@ class _HomeViewState extends State<HomeView> {
                     CategoryListView(),
                     Expanded(
                       child: ListView.builder(
-                        controller: _scrollController,
-                        itemCount: tasks.length + (isLoadingMore ? 1 : 0),
+                        itemCount: tasks.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          // Show loading indicator at the bottom when loading more
-                          if (index == tasks.length && isLoadingMore) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16.h),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-                          // Regular task item
                           return TaskItem(taskModel: tasks[index]);
                         },
                       ),
