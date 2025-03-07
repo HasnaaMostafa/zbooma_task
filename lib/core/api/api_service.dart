@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -9,12 +10,14 @@ import 'package:zbooma_task/core/preferences/shared_pref.dart';
 import 'package:zbooma_task/core/services/di.dart';
 import 'package:zbooma_task/core/utils/widgets/dialogs/flutter_toast.dart';
 import 'package:zbooma_task/features/auth/presentation/pages/login_view.dart';
-import 'package:zbooma_task/features/profile/presentation/cubit/profile_cubit.dart';
 
 class ApiServices {
   static late Dio dio;
-
   static late TaskPreferences preferences;
+
+  // Queue to hold pending requests
+  static final List<({RequestOptions options, ErrorInterceptorHandler handler})>
+  _requestQueue = [];
 
   static init() {
     dio = Dio(BaseOptions(baseUrl: "https://todo.iraqsapp.com"));
@@ -22,6 +25,11 @@ class ApiServices {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // Add the token to the request headers
+          final String? token = preferences.getToken();
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -34,7 +42,13 @@ class ApiServices {
             log(e.response?.statusCode.toString() ?? "");
             log("----------error-----------");
           }
-          if (e.response.toString().contains("Unauthorized")) {
+
+          if (e.response?.statusMessage?.toLowerCase().contains(
+                "unauthorized",
+              ) ==
+              true) {
+            _requestQueue.add((options: e.requestOptions, handler: handler));
+
             String? refreshToken = preferences.getRefreshToken();
             if (refreshToken != null) {
               try {
@@ -42,23 +56,61 @@ class ApiServices {
                   endPoint: EndPoints.refreshToken,
                   query: {"token": refreshToken},
                 );
+
                 if (kDebugMode) {
                   print(response.data);
                 }
+
                 await preferences.saveToken(response.data['access_token']);
                 await preferences.saveRefreshToken(refreshToken);
 
-                ProfileCubit.get(
-                  navigatorKey.currentState!.context,
-                ).getUserData(token: response.data['access_token']);
+                // ProfileCubit.get(navigatorKey.currentState!.context).getUserData(
+                //   token: response.data['access_token'],
+                // );
 
-                print("Refresh Token");
+                if (kDebugMode) {
+                  print("Refresh Token Success");
+                }
+
+                for (final request in _requestQueue) {
+                  try {
+                    request.options.headers['Authorization'] =
+                        'Bearer ${response.data['access_token']}';
+
+                    final retryResponse = await dio.request(
+                      request.options.path,
+                      data: request.options.data,
+                      queryParameters: request.options.queryParameters,
+                      options: Options(
+                        method: request.options.method,
+                        headers: request.options.headers,
+                      ),
+                    );
+
+                    request.handler.resolve(retryResponse);
+                  } catch (retryError) {
+                    request.handler.reject(
+                      DioException(
+                        requestOptions: request.options,
+                        error: retryError,
+                      ),
+                    );
+                  }
+                }
+
+                _requestQueue.clear();
 
                 return handler.resolve(response);
               } catch (refreshError) {
+                if (kDebugMode) {
+                  print("Refresh Token Failed: $refreshError");
+                }
+
+                _requestQueue.clear();
                 return handler.reject(
                   DioException(
-                    requestOptions: RequestOptions(data: refreshError),
+                    requestOptions: e.requestOptions,
+                    error: refreshError,
                   ),
                 );
               }
@@ -71,7 +123,9 @@ class ApiServices {
               MaterialPageRoute(builder: (context) => const LoginView()),
               (route) => false,
             );
+            return handler.reject(e);
           }
+
           return handler.reject(e);
         },
       ),
