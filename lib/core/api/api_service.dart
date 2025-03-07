@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +30,11 @@ class ApiServices {
         onError: (DioException e, handler) async {
           if (kDebugMode) {
             print(e.response?.statusMessage);
+            log(e.response?.statusMessage.toString() ?? "");
+            log(e.response?.statusCode.toString() ?? "");
+            log("----------error-----------");
           }
-          if (e.response?.statusCode == 401 &&
-              e.response.toString().contains("Unauthorized")) {
+          if (e.response.toString().contains("Unauthorized")) {
             String? refreshToken = preferences.getRefreshToken();
             if (refreshToken != null) {
               try {
@@ -47,6 +51,8 @@ class ApiServices {
                 ProfileCubit.get(
                   navigatorKey.currentState!.context,
                 ).getUserData(token: response.data['access_token']);
+
+                print("Refresh Token");
 
                 return handler.resolve(response);
               } catch (refreshError) {

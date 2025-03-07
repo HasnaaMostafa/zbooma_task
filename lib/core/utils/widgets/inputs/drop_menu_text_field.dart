@@ -103,7 +103,14 @@ class _CustomDropdownTextFieldState extends State<CustomDropdownTextField> {
               style: widget.style ?? AppStyles.regular14Grey7F,
               icon: widget.dropSufffix,
               value: _selectedValue,
-
+              validator:
+                  widget.validator ??
+                  (String? value) {
+                    if (widget.selectedValue == null) {
+                      return "Field Required";
+                    }
+                    return null;
+                  },
               onChanged: (String? newValue) {
                 setState(() {
                   _selectedValue = newValue;

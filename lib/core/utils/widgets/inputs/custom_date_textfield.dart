@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:zbooma_task/core/function/format_date.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
 import 'package:zbooma_task/core/static/icons.dart';
@@ -21,8 +20,6 @@ class CustomDateTextField extends StatelessWidget {
   final String? hint;
   final String? text;
   final bool? isFilled;
-
- 
 
   @override
   Widget build(BuildContext context) {
