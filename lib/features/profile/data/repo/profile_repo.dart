@@ -8,12 +8,11 @@ import 'package:zbooma_task/core/api/end_points.dart';
 import 'package:zbooma_task/core/errors/failure.dart';
 import 'package:zbooma_task/core/errors/server_failure.dart';
 import 'package:zbooma_task/core/preferences/shared_pref.dart';
-import 'package:zbooma_task/features/auth/data/models/auth_model.dart';
 import 'package:zbooma_task/features/profile/data/models/profile_model.dart';
 
 abstract class ProfileRepo {
   Future<Either<Failure, ProfileModel>> getUserData();
-  Future<Either<Failure, AuthModel>> logout();
+  Future<Either<Failure, bool>> logout();
 }
 
 class ProfileRepoImpl implements ProfileRepo {
@@ -45,12 +44,14 @@ class ProfileRepoImpl implements ProfileRepo {
   }
 
   @override
-  Future<Either<Failure, AuthModel>> logout() async {
+  Future<Either<Failure, bool>> logout() async {
     try {
-      String? token = preferences.getRefreshToken();
+      String? refreshToken = preferences.getRefreshToken();
+      String? token = preferences.getToken();
       var response = await ApiServices.postData(
         endPoint: EndPoints.logout,
-        data: {'token': token},
+        data: {'token': refreshToken},
+        token: token,
       );
       log(token.toString());
 
@@ -58,10 +59,9 @@ class ProfileRepoImpl implements ProfileRepo {
       if (kDebugMode) {
         print(response.data);
       }
-       preferences.deleteToken();
+      preferences.deleteToken();
       preferences.deleteRefreshToken();
-      final AuthModel profileData = AuthModel.fromJson(response.data);
-      return Right(profileData);
+      return Right(true);
     } on Exception catch (e) {
       if (e is DioException) {
         return Left(ServerFailure.fromDioException(e));

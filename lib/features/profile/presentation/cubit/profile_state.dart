@@ -21,9 +21,9 @@ final class ProfileGetUserDataError extends ProfileState {
 final class LogoutLoading extends ProfileState {}
 
 final class LogoutSuccess extends ProfileState {
-  final AuthModel authModel;
+  
 
-  LogoutSuccess({required this.authModel});
+  LogoutSuccess();
 }
 
 final class LogoutError extends ProfileState {

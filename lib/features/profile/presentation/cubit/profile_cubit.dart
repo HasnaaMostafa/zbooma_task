@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:zbooma_task/features/auth/data/models/auth_model.dart';
 import 'package:zbooma_task/features/profile/data/models/profile_model.dart';
 import 'package:zbooma_task/features/profile/data/repo/profile_repo.dart';
 
@@ -37,7 +36,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(LogoutError(error: error.errMessage.toString()));
       },
       (model) {
-        emit(LogoutSuccess(authModel: model));
+        emit(LogoutSuccess());
       },
     );
   }
