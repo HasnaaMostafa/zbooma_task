@@ -27,6 +27,7 @@ class TaskCubit extends Cubit<TaskState> {
     response.fold(
       (error) {
         emit(TaskGetAllError(error: error.errMessage.toString()));
+        print(error.errMessage.toString());
       },
       (tasksList) {
         if (loadMore) {
@@ -58,6 +59,16 @@ class TaskCubit extends Cubit<TaskState> {
     currentPage = 1;
     isLastPage = false;
     getAllTasks(page: 1);
+  }
+
+  List<TaskModel> filteredTasks = [];
+  void filterTasksByPriority(String priority) {
+    if (priority == "all") {
+      filteredTasks = tasks;
+    } else {
+      filteredTasks = tasks.where((task) => task.priority == priority).toList();
+    }
+    emit(TaskGetAllSuccess(filteredTasks));
   }
 
   void getTaskById(String id) async {

@@ -53,11 +53,14 @@ class TaskRepoImpl implements TaskRepo {
               .map((task) => TaskModel.fromJson(task))
               .toList();
 
+      print(tasks);
       return Right(tasks);
     } on Exception catch (e) {
       if (e is DioException) {
+        print(e);
         return Left(ServerFailure.fromDioException(e));
       }
+      print(e);
       return Left(ServerFailure(e.toString()));
     }
   }

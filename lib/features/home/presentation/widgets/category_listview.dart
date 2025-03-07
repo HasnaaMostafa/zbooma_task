@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/category_item.dart';
 
 class CategoryListView extends StatefulWidget {
   const CategoryListView({super.key});
 
-  static const List<String> titles = [
-    "All",
-    "Inpogress",
-    "Waiting ",
-    "Finished",
-  ];
+  static const List<String> titles = ["All", "Low", "Medium", "High"];
 
   @override
   State<CategoryListView> createState() => _CategoryListViewState();
@@ -37,6 +34,9 @@ class _CategoryListViewState extends State<CategoryListView> {
                 setState(() {
                   selectedIndex = index;
                 });
+                context.read<TaskCubit>().filterTasksByPriority(
+                  CategoryListView.titles[index].toLowerCase(),
+                );
               },
             );
           },

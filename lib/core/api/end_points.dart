@@ -7,5 +7,5 @@ abstract class EndPoints {
   static const profile = "/auth/profile";
 
   //home
-  static const task =" /todos";
+  static const task ="/todos";
 }

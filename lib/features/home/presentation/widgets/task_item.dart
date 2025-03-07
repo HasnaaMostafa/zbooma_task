@@ -5,10 +5,14 @@ import 'package:zbooma_task/core/static/app_assets.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
 import 'package:zbooma_task/core/static/icons.dart';
 import 'package:zbooma_task/core/theme/colors.dart';
+import 'package:zbooma_task/features/home/data/models/task_model.dart';
 import 'package:zbooma_task/features/home/presentation/pages/task_details_view.dart';
+import 'package:zbooma_task/features/home/presentation/widgets/task_status.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+  const TaskItem({super.key, required this.taskModel});
+
+  final TaskModel taskModel;
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +44,19 @@ class TaskItem extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Grocery Shopping App",
+                        taskModel.title ?? "",
                         overflow: TextOverflow.ellipsis,
                         style: AppStyles.bold16White.copyWith(
                           color: Colors.black,
                         ),
                       ),
                     ),
-                    TaskStatus(),
+                    TaskStatus(status: taskModel.status ?? ""),
                   ],
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  "This application is designed for super shops. By using ",
+                  taskModel.desc ?? "",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppStyles.regular14Grey6E.copyWith(
@@ -62,12 +66,18 @@ class TaskItem extends StatelessWidget {
                 SizedBox(height: 4.h),
                 Row(
                   children: [
-                    SvgPicture.asset(AppIcons.flagIc),
+                    SvgPicture.asset(
+                      AppIcons.flagIc,
+                      colorFilter: ColorFilter.mode(
+                        getPriorityColor(taskModel.priority ?? ""),
+                        BlendMode.srcIn,
+                      ),
+                    ),
                     SizedBox(width: 2.w),
                     Text(
-                      "Low",
+                      taskModel.priority ?? "",
                       style: AppStyles.medium12.copyWith(
-                        color: AppColors.primary,
+                        color: getPriorityColor(taskModel.priority ?? ""),
                       ),
                     ),
                     Spacer(),
@@ -88,25 +98,15 @@ class TaskItem extends StatelessWidget {
   }
 }
 
-class TaskStatus extends StatelessWidget {
-  const TaskStatus({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 18.h,
-
-      padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 6.w),
-      decoration: ShapeDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
-      ),
-      child: Center(
-        child: Text(
-          "Inprogress",
-          style: AppStyles.medium12.copyWith(color: AppColors.primary),
-        ),
-      ),
-    );
+Color getPriorityColor(String status) {
+  switch (status.toLowerCase()) {
+    case 'low':
+      return Color(0xff0087FF);
+    case 'medium':
+      return AppColors.primary;
+    case 'high':
+      return Color(0xffFF7D53);
+    default:
+      return Colors.grey;
   }
 }
