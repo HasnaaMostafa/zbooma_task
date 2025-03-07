@@ -10,7 +10,7 @@ Future<void> initLocator() async {
   // sl.registerFactory<AuthCubit>(() => AuthCubit(sl(), sl()));
 
   //* Repository
-  sl.registerLazySingleton<AuthRepo>(() => AuthRepoImpl());
+  sl.registerLazySingleton<AuthRepo>(() => AuthRepoImpl(sl()));
 
   //! External
   // sl.registerLazySingleton(() => DioClient(sl()));

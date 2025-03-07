@@ -24,6 +24,15 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordContoller = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey();
+  String? code;
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    passwordContoller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +54,16 @@ class _LoginViewState extends State<LoginView> {
                     children: [
                       Text("Login", style: AppStyles.bold24black),
                       SizedBox(height: 24.h),
-                      PhoneNumberTextField(phoneController: phoneController),
+                      PhoneNumberTextField(
+                        phoneController: phoneController,
+                        onCountryChanged: (value) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              code = value;
+                            });
+                          });
+                        },
+                      ),
                       CustomTextTextField(
                         isPassword: true,
                         hintText: "Password...",
@@ -70,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                                 ),
                               );
                             }
-                            if (state is LoginError) {
+                            if (state is AuthError) {
                               return showToast(
                                 message: state.error,
                                 state: ToastStates.error,
@@ -79,12 +97,15 @@ class _LoginViewState extends State<LoginView> {
                           },
                           builder: (context, state) {
                             return CustomElevatedButton(
-                              loading: state is LoginLoading,
+                              isLoading: state is AuthLoading,
                               title: "Sign In",
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
                                   context.read<AuthCubit>().login(
-                                    phone: phoneController.text,
+                                    phone:
+                                        code == null
+                                            ? "20${phoneController.text}"
+                                            : phoneController.text,
                                     password: passwordContoller.text,
                                   );
                                 }

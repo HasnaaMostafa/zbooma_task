@@ -5,16 +5,22 @@ sealed class AuthState {}
 final class AuthInitial extends AuthState {}
 
 
-class LoginLoading extends AuthState {}
+class AuthLoading extends AuthState {}
 
 class LoginSuccess extends AuthState {
-  final LoginModel loginModel;
+  final AuthModel loginModel;
 
   LoginSuccess({required this.loginModel});
 }
 
-class LoginError extends AuthState {
+class AuthError extends AuthState {
   final String error;
 
-  LoginError({required this.error});
+  AuthError({required this.error});
+}
+
+class RegisterSuccess extends AuthState {
+  final AuthModel registerModel;
+
+  RegisterSuccess({required this.registerModel});
 }

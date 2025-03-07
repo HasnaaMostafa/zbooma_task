@@ -35,7 +35,7 @@ class IntroView extends StatelessWidget {
                   SizedBox(height: 32.h),
                   CustomElevatedButton(
                     title: "Let’s Start",
-                    icon: AppIcons.arrowIc,
+                    iconPath: AppIcons.arrowIc,
 
                     onPressed: () {
                       Navigator.push(

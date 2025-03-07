@@ -4,6 +4,7 @@ import 'package:zbooma_task/core/preferences/shared_pref.dart';
 import 'package:zbooma_task/core/services/di.dart';
 import 'package:zbooma_task/core/static/icons.dart';
 import 'package:zbooma_task/core/theme/colors.dart';
+import 'package:zbooma_task/features/home/presentation/pages/home_view.dart';
 import 'package:zbooma_task/features/intro/presentation/pages/intro_view.dart';
 
 class SplashView extends StatefulWidget {
@@ -36,6 +37,10 @@ class _SplashViewState extends State<SplashView>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(seconds: 3), () {
         if (preferences.getToken() != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) => HomeView()),
+          );
         } else {
           Navigator.push(
             context,
