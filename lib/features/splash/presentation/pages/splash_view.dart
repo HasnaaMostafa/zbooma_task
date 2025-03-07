@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:zbooma_task/core/preferences/shared_pref.dart';
 import 'package:zbooma_task/core/services/di.dart';
 import 'package:zbooma_task/core/static/icons.dart';
 import 'package:zbooma_task/core/theme/colors.dart';
+import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/pages/home_view.dart';
 import 'package:zbooma_task/features/intro/presentation/pages/intro_view.dart';
 
@@ -39,7 +41,13 @@ class _SplashViewState extends State<SplashView>
         if (preferences.getToken() != null) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (BuildContext context) => HomeView()),
+            MaterialPageRoute(
+              builder:
+                  (BuildContext context) => BlocProvider(
+                    create: (context) => TaskCubit(sl()),
+                    child: HomeView(),
+                  ),
+            ),
             (route) => false,
           );
         } else {

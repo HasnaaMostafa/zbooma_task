@@ -15,7 +15,6 @@ class ApiServices {
   static late Dio dio;
   static late TaskPreferences preferences;
 
-  // Queue to hold pending requests
   static final List<({RequestOptions options, ErrorInterceptorHandler handler})>
   _requestQueue = [];
 
@@ -25,7 +24,6 @@ class ApiServices {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // Add the token to the request headers
           final String? token = preferences.getToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
@@ -37,16 +35,16 @@ class ApiServices {
         },
         onError: (DioException e, handler) async {
           if (kDebugMode) {
-            print(e.response?.statusMessage);
             log(e.response?.statusMessage.toString() ?? "");
             log(e.response?.statusCode.toString() ?? "");
             log("----------error-----------");
           }
 
           if (e.response?.statusMessage?.toLowerCase().contains(
-                "unauthorized",
-              ) ==
-              true) {
+                    "unauthorized",
+                  ) ==
+                  true &&
+              e.response?.statusCode == 401) {
             _requestQueue.add((options: e.requestOptions, handler: handler));
 
             String? refreshToken = preferences.getRefreshToken();

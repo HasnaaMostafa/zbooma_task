@@ -14,6 +14,7 @@ import 'package:zbooma_task/core/utils/widgets/inputs/drop_menu_text_field.dart'
 import 'package:zbooma_task/core/utils/widgets/inputs/phone_number_text_field.dart';
 import 'package:zbooma_task/features/auth/presentation/cubit/cubit/auth_cubit_cubit.dart';
 import 'package:zbooma_task/features/auth/presentation/pages/login_view.dart';
+import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/pages/home_view.dart';
 
 class RegisterView extends StatefulWidget {
@@ -138,7 +139,11 @@ class _RegisterViewState extends State<RegisterView> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (BuildContext context) => HomeView(),
+                                  builder:
+                                      (BuildContext context) => BlocProvider(
+                                        create: (context) => TaskCubit(sl()),
+                                        child: HomeView(),
+                                      ),
                                 ),
                               );
                             }

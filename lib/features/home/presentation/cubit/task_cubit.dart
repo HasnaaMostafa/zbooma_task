@@ -61,14 +61,14 @@ class TaskCubit extends Cubit<TaskState> {
     getAllTasks(page: 1);
   }
 
-  List<TaskModel> filteredTasks = [];
+  List<TaskModel> filteredTasks = []; 
   void filterTasksByPriority(String priority) {
     if (priority == "all") {
-      filteredTasks = tasks;
+      filteredTasks = tasks; 
     } else {
       filteredTasks = tasks.where((task) => task.priority == priority).toList();
     }
-    emit(TaskGetAllSuccess(filteredTasks));
+    emit(TaskGetAllSuccess(filteredTasks)); 
   }
 
   void getTaskById(String id) async {

@@ -11,6 +11,7 @@ import 'package:zbooma_task/core/utils/widgets/inputs/custom_text_text_field.dar
 import 'package:zbooma_task/core/utils/widgets/inputs/phone_number_text_field.dart';
 import 'package:zbooma_task/features/auth/presentation/cubit/cubit/auth_cubit_cubit.dart';
 import 'package:zbooma_task/features/auth/presentation/pages/register_view.dart';
+import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/pages/home_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -85,7 +86,11 @@ class _LoginViewState extends State<LoginView> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (BuildContext context) => HomeView(),
+                                  builder:
+                                      (BuildContext context) => BlocProvider(
+                                        create: (context) => TaskCubit(sl()),
+                                        child: HomeView(),
+                                      ),
                                 ),
                               );
                             }
