@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zbooma_task/core/function/format_date.dart';
 import 'package:zbooma_task/core/services/di.dart';
-import 'package:zbooma_task/core/static/app_assets.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
 import 'package:zbooma_task/core/static/icons.dart';
 import 'package:zbooma_task/core/theme/colors.dart';
@@ -12,6 +11,7 @@ import 'package:zbooma_task/core/utils/widgets/appbar/custom_appbar.dart';
 import 'package:zbooma_task/core/utils/widgets/inputs/custom_date_textfield.dart';
 import 'package:zbooma_task/core/utils/widgets/inputs/drop_menu_text_field.dart';
 import 'package:zbooma_task/core/utils/widgets/shimmer/loading_widget.dart';
+import 'package:zbooma_task/features/auth/presentation/cubit/constants.dart';
 import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/cubit/task_state.dart';
 
@@ -43,7 +43,7 @@ class _TaskDetailsViewState extends State<TaskDetailsView> {
                 physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    Image.asset(AppImages.task, height: 255.h),
+                    Image.network(defaultImage, height: 255.h),
                     SizedBox(height: 16.h),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 22.w),

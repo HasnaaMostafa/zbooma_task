@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zbooma_task/core/function/format_date.dart';
-import 'package:zbooma_task/core/static/app_assets.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
 import 'package:zbooma_task/core/static/icons.dart';
 import 'package:zbooma_task/core/theme/colors.dart';
+import 'package:zbooma_task/features/auth/presentation/cubit/constants.dart';
 import 'package:zbooma_task/features/home/data/models/task_model.dart';
 import 'package:zbooma_task/features/home/presentation/pages/task_details_view.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/task_status.dart';
@@ -34,7 +34,7 @@ class TaskItem extends StatelessWidget {
             height: 100.h,
             width: 100.w,
             decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage(AppImages.task)),
+              image: DecorationImage(image: NetworkImage(defaultImage)),
             ),
           ),
           SizedBox(width: 12.w),
