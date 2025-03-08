@@ -12,6 +12,10 @@ import 'package:zbooma_task/features/home/data/models/task_model.dart';
 
 abstract class TaskRepo {
   Future<Either<Failure, List<TaskModel>>> getAllTasks({int page = 1});
+  Future<Either<Failure, List<TaskModel>>> getFilteredTasks({
+    required String priority,
+    int page = 1,
+  });
   Future<Either<Failure, TaskModel>> getTaskById(String id);
   Future<Either<Failure, TaskModel>> createTask({
     required String title,
@@ -60,7 +64,48 @@ class TaskRepoImpl implements TaskRepo {
     } on Exception catch (e) {
       if (e is DioException) {
         log(e.toString());
-        log(e.message??"");
+        log(e.message ?? "");
+        return Left(ServerFailure.fromDioException(e));
+      }
+      log(e.toString());
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TaskModel>>> getFilteredTasks({
+    required String priority,
+    int page = 1,
+  }) async {
+    try {
+      String? token = preferences.getToken();
+
+      Map<String, dynamic> queryParams = {"page": page};
+
+      if (priority != "all") {
+        queryParams["priority"] = priority;
+      }
+
+      var response = await ApiServices.getData(
+        endPoint: EndPoints.task,
+        query: queryParams,
+        token: token,
+      );
+
+      if (kDebugMode) {
+        print("Filtered tasks response: ${response.data}");
+      }
+
+      List<TaskModel> tasks =
+          (response.data as List)
+              .map((task) => TaskModel.fromJson(task))
+              .toList();
+
+      return Right(tasks);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        log(e.toString());
+        log(e.message ?? "");
         return Left(ServerFailure.fromDioException(e));
       }
       log(e.toString());

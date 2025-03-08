@@ -26,13 +26,28 @@ class TaskGetAllSuccess extends TaskState {
   List<Object> get props => [identityHashCode(this)];
 }
 
-class TasksFilteredSuccess extends TaskState {
+class TaskFilterLoading extends TaskState {}
+
+class TaskFilterPaginationLoading extends TaskState {}
+
+class TaskFilterSuccess extends TaskState {
   final List<TaskModel> tasks;
+  final int currentPage;
+  final bool hasMorePages;
+  final String priority;
 
-  const TasksFilteredSuccess({required this.tasks});
+  const TaskFilterSuccess({
+    required this.tasks,
+    required this.currentPage,
+    required this.hasMorePages,
+    required this.priority,
+  });
+}
 
-  @override
-  List<Object> get props => [identityHashCode(this)];
+class TaskFilterError extends TaskState {
+  final String error;
+
+  const TaskFilterError({required this.error});
 }
 
 class TaskGetAllError extends TaskState {
@@ -44,36 +59,36 @@ class TaskGetMoreLoading extends TaskState {}
 
 class TaskGetMoreSuccess extends TaskState {
   final List<TaskModel> tasks;
-  TaskGetMoreSuccess(this.tasks);
+  const TaskGetMoreSuccess(this.tasks);
 }
 
 class TaskGetMoreError extends TaskState {
   final String error;
-  TaskGetMoreError({required this.error});
+  const TaskGetMoreError({required this.error});
 }
 
 class TaskGetByIdLoading extends TaskState {}
 
 class TaskGetByIdSuccess extends TaskState {
   final TaskModel task;
-  TaskGetByIdSuccess(this.task);
+  const TaskGetByIdSuccess(this.task);
 }
 
 class TaskGetByIdError extends TaskState {
   final String error;
-  TaskGetByIdError({required this.error});
+  const TaskGetByIdError({required this.error});
 }
 
 class TaskCreateLoading extends TaskState {}
 
 class TaskCreateSuccess extends TaskState {
   final TaskModel task;
-  TaskCreateSuccess(this.task);
+  const TaskCreateSuccess(this.task);
 }
 
 class TaskCreateError extends TaskState {
   final String error;
-  TaskCreateError({required this.error});
+  const TaskCreateError({required this.error});
 }
 
 class TaskUpdateLoading extends TaskState {}
@@ -81,13 +96,13 @@ class TaskUpdateLoading extends TaskState {}
 class TaskUpdateSuccess extends TaskState {
   final TaskModel taskModel;
 
-  TaskUpdateSuccess(this.taskModel);
+  const TaskUpdateSuccess(this.taskModel);
 }
 
 class TaskUpdateError extends TaskState {
   final String error;
 
-  TaskUpdateError({required this.error});
+  const TaskUpdateError({required this.error});
 }
 
 class TaskDeleteLoading extends TaskState {}
@@ -95,11 +110,11 @@ class TaskDeleteLoading extends TaskState {}
 class TaskDeleteSuccess extends TaskState {
   final String id;
 
-  TaskDeleteSuccess(this.id);
+  const TaskDeleteSuccess(this.id);
 }
 
 class TaskDeleteError extends TaskState {
   final String error;
 
-  TaskDeleteError({required this.error});
+  const TaskDeleteError({required this.error});
 }

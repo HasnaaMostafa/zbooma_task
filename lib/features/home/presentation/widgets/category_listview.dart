@@ -37,7 +37,7 @@ class _CategoryListViewState extends State<CategoryListView> {
                   selectedIndex = index;
                 });
 
-                context.read<TaskCubit>().filterTasksByPriority(
+                context.read<TaskCubit>().getFilteredTasks(priority: 
                   CategoryListView.titles[index].toLowerCase(),
                 );
 

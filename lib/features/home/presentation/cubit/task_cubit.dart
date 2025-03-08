@@ -13,75 +13,116 @@ class TaskCubit extends Cubit<TaskState> {
   static TaskCubit get(context) => BlocProvider.of(context);
   bool hasMorePages = true;
   int currentPage = 1;
+  List<TaskModel> allTasks = [];
 
-List<TaskModel> allTasks = []; 
-List<TaskModel> filteredTasks = []; 
+  Future<void> getAllTasks() async {
+    if (!hasMorePages) return;
 
-String currentPriority = "all";
+    if (currentPage == 1) {
+      allTasks.clear();
+      emit(TaskGetAllLoading());
+    }
 
-Future<void> getAllTasks() async {
-  if (currentPriority != "all" || !hasMorePages) return;
-  
-  if (currentPage == 1) {
-    allTasks.clear();
-    emit(TaskGetAllLoading());
+    final response = await taskRepo.getAllTasks(page: currentPage);
+
+    return response.fold(
+      (error) {
+        emit(TaskGetAllError(error: error.errMessage.toString()));
+        log(error.toString());
+      },
+      (items) {
+        if (items.isEmpty || items.length < 20) {
+          hasMorePages = false;
+        }
+
+        allTasks.addAll(items);
+
+        emit(
+          TaskGetAllSuccess(
+            hasMorePages: hasMorePages,
+            tasks: allTasks,
+            currentPage: currentPage,
+          ),
+        );
+
+        currentPage++;
+      },
+    );
   }
 
-  final response = await taskRepo.getAllTasks(page: currentPage);
+  bool hasMoreFilteredPages = true;
+  int currentFilteredPage = 1;
+  List<TaskModel> filteredTasks = [];
+  String currentPriority = "all";
 
-  return response.fold(
-    (error) {
-      emit(TaskGetAllError(error: error.errMessage.toString()));
-      log(error.toString());
-    },
-    (items) {
-      if (items.isEmpty || items.length < 20) {
-        hasMorePages = false;
-      }
 
-      allTasks.addAll(items);
-            if (currentPriority == "all") {
-        filteredTasks = allTasks;
-      } else {
-        filteredTasks = allTasks.where((task) => task.priority == currentPriority).toList();
-      }
-      
-      emit(
-        TaskGetAllSuccess(
-          hasMorePages: currentPriority == "all" ? hasMorePages : false,
-          tasks: filteredTasks,
-          currentPage: currentPage,
-        ),
+  Future<void> getFilteredTasks({
+    required String priority,
+    bool refresh = false,
+  }) async {
+    if (refresh || currentPriority != priority) {
+      currentFilteredPage = 1;
+      hasMoreFilteredPages = true;
+      filteredTasks.clear();
+      currentPriority = priority;
+    }
+    if (!hasMoreFilteredPages) return;
+
+    if (currentFilteredPage == 1) {
+      emit(TaskFilterLoading());
+    } else {
+      emit(TaskFilterPaginationLoading());
+    }
+    final response = await taskRepo.getFilteredTasks(
+      priority: priority,
+      page: currentFilteredPage,
+    );
+
+    return response.fold(
+      (error) {
+        emit(TaskFilterError(error: error.errMessage.toString()));
+        log(error.toString());
+      },
+      (items) {
+        if (items.isEmpty || items.length < 20) {
+          hasMoreFilteredPages = false;
+        }
+
+        filteredTasks.addAll(items);
+
+        emit(
+          TaskFilterSuccess(
+            hasMorePages: hasMoreFilteredPages,
+            tasks: filteredTasks,
+            currentPage: currentFilteredPage,
+            priority: priority,
+          ),
+        );
+
+        currentFilteredPage++;
+      },
+    );
+  }
+  Future<void> refreshFilteredTasks() async {
+    if (currentPriority == "all") {
+      currentPage = 1;
+      hasMorePages = true;
+      return getAllTasks();
+    } else {
+      return getFilteredTasks(
+        priority: currentPriority,
+        refresh: true,
       );
-      
-      currentPage++;
-    },
-  );
-}
-
-void filterTasksByPriority(String priority) {
-  currentPriority = priority;
-  
-  if (priority == "all") {
-    filteredTasks = allTasks;
-    emit(
-      TaskGetAllSuccess(
-        tasks: filteredTasks,
-        currentPage: currentPage,
-        hasMorePages: hasMorePages,
-      ),
-    );
-  } else {
-    filteredTasks = allTasks.where((task) => task.priority == priority).toList();
-    emit(
-      TaskGetAllSuccess(
-        tasks: filteredTasks,
-        currentPage: currentPage,
-        hasMorePages: false, 
-      ),
-    );
+    }
   }
-}
+
+  void clearFilters() {
+    currentPriority = "all";
+    currentPage = 1;
+    hasMorePages = true;
+    filteredTasks.clear();
+    getAllTasks();
+  }
 
   void getTaskById(String id) async {
     emit(TaskGetByIdLoading());
