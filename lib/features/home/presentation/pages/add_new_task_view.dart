@@ -33,6 +33,7 @@ class _AddNewTaskViewState extends State<AddNewTaskView> {
 
   String? priority;
   String imagePath = "";
+  bool isImageValidated = true;
 
   @override
   void dispose() {
@@ -44,8 +45,19 @@ class _AddNewTaskViewState extends State<AddNewTaskView> {
   void _onImagePicked(PlatformFile image) {
     setState(() {
       imagePath = image.path ?? "";
+      isImageValidated = true;
       print(imagePath);
     });
+  }
+
+  bool validateImage() {
+    if (imagePath.isEmpty) {
+      setState(() {
+        isImageValidated = false;
+      });
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -62,6 +74,7 @@ class _AddNewTaskViewState extends State<AddNewTaskView> {
             child: Column(
               children: [
                 ImagePickerWidget(
+                  isImageValidated: isImageValidated,
                   onImagePicked: _onImagePicked,
                   initialImagePath: imagePath,
                 ),
@@ -133,32 +146,17 @@ class _AddNewTaskViewState extends State<AddNewTaskView> {
                         isLoading: state is TaskCreateLoading,
                         title: "Add task",
                         onPressed: () {
-                          final DateFormat inputFormatter = DateFormat(
-                            'd MMMM, y',
-                          );
-
-                          final DateTime dateTime = inputFormatter.parse(
-                            datecContoller.text,
-                          );
-
-                          final DateFormat outputFormatter = DateFormat(
-                            'yyyy-MM-dd',
-                          );
-                          String date = outputFormatter.format(dateTime);
-
-                          if (formKey.currentState!.validate()) {
+                          bool isImageValid = validateImage();
+                          if (formKey.currentState!.validate() &&
+                              isImageValid) {
                             context.read<TaskCubit>().createTask(
                               title: titleContoller.text,
                               desc: descContoller.text,
                               priority: priority ?? "",
                               image: imagePath,
-                              endDate: date,
+                              endDate: getDate(),
                             );
                           }
-                          print(titleContoller.text);
-                          print(descContoller.text);
-                          print(priority);
-                          print(date);
                         },
                       );
                     },
@@ -171,5 +169,15 @@ class _AddNewTaskViewState extends State<AddNewTaskView> {
         ),
       ),
     );
+  }
+
+  String getDate() {
+    final DateFormat inputFormatter = DateFormat('d MMMM, y');
+
+    final DateTime dateTime = inputFormatter.parse(datecContoller.text);
+
+    final DateFormat outputFormatter = DateFormat('yyyy-MM-dd');
+    String date = outputFormatter.format(dateTime);
+    return date;
   }
 }

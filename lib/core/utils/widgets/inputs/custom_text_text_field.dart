@@ -118,6 +118,7 @@ class _CustomTextTextFieldState extends State<CustomTextTextField> {
               obscureText: _obscureText,
               style: AppStyles.regular14Grey7F,
               decoration: InputDecoration(
+                
                 labelStyle: widget.labelStyle,
                 labelText: widget.label,
                 filled: widget.isFilled,

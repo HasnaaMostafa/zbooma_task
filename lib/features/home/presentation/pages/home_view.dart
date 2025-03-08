@@ -72,33 +72,33 @@ class _HomeViewState extends State<HomeView> {
                         ? state.tasks
                         : (state as TasksFilteredSuccess).tasks;
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "My Tasks",
-                      style: AppStyles.bold16White.copyWith(
-                        color: Color(0xff24252C).withValues(alpha: 0.6),
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    _taskCubit.currentPage = 1;
+                    _taskCubit.hasMorePages = true;
+                    return Future(() {
+                      _taskCubit.getAllTasks();
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "My Tasks",
+                        style: AppStyles.bold16White.copyWith(
+                          color: Color(0xff24252C).withValues(alpha: 0.6),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 16.h),
-                    CategoryListView(
-                      onChangePriority: (value) {
-                        setState(() {
-                          priority = value;
-                        });
-                      },
-                    ),
-                    if (tasks.isNotEmpty)
-                      Expanded(
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            _taskCubit.currentPage = 1;
-                            _taskCubit.hasMorePages = true;
-                            return Future(() {
-                              _taskCubit.getAllTasks();
-                            });
-                          },
+                      SizedBox(height: 16.h),
+                      CategoryListView(
+                        onChangePriority: (value) {
+                          setState(() {
+                            priority = value;
+                          });
+                        },
+                      ),
+                      if (tasks.isNotEmpty)
+                        Expanded(
                           child: ListView.builder(
                             controller: _scrollController,
                             itemCount:
@@ -123,10 +123,10 @@ class _HomeViewState extends State<HomeView> {
                             },
                           ),
                         ),
-                      ),
-                    if (tasks.isEmpty)
-                      Expanded(child: EmptyWidget(title: "No data")),
-                  ],
+                      if (tasks.isEmpty)
+                        Expanded(child: EmptyWidget(title: "No data")),
+                    ],
+                  ),
                 );
               } else if (state is TaskGetAllLoading &&
                   _taskCubit.currentPage == 1) {
