@@ -12,8 +12,39 @@ import 'package:zbooma_task/features/home/presentation/widgets/fab_icon.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/home_appbar.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/task_item.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final ScrollController _scrollController = ScrollController();
+  late TaskCubit _taskCubit;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _setupScrollListener() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent * 0.8) {
+        if (!_isLoading && _taskCubit.hasMorePages) {
+          _isLoading = true;
+          _taskCubit.getAllTasks().then((_) {
+            _isLoading = false;
+          });
+        }
+      }
+    });
+  }
+
+  String? priority;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +55,23 @@ class HomeView extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
         child: BlocProvider(
-          create: (context) => TaskCubit(sl())..getAllTasks(),
+          create: (context) {
+            _taskCubit = TaskCubit(sl())..getAllTasks();
+            return _taskCubit;
+          },
           child: BlocConsumer<TaskCubit, TaskState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is TaskGetAllSuccess && _taskCubit.currentPage == 2) {
+                _setupScrollListener();
+              }
+            },
             builder: (context, state) {
-              if (state is TaskGetAllSuccess) {
-                final tasks = state.tasks;
+              if (state is TaskGetAllSuccess || state is TasksFilteredSuccess) {
+                final tasks =
+                    state is TaskGetAllSuccess
+                        ? state.tasks
+                        : (state as TasksFilteredSuccess).tasks;
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -40,32 +82,59 @@ class HomeView extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 16.h),
-                    CategoryListView(),
-                    if (state.tasks.isNotEmpty)
+                    CategoryListView(
+                      onChangePriority: (value) {
+                        setState(() {
+                          priority = value;
+                        });
+                      },
+                    ),
+                    if (tasks.isNotEmpty)
                       Expanded(
                         child: RefreshIndicator(
                           onRefresh: () async {
+                            _taskCubit.currentPage = 1;
+                            _taskCubit.hasMorePages = true;
                             return Future(() {
-                              context.read<TaskCubit>().getAllTasks();
+                              _taskCubit.getAllTasks();
                             });
                           },
                           child: ListView.builder(
-                            itemCount: tasks.length,
+                            controller: _scrollController,
+                            itemCount:
+                                tasks.length +
+                                (_taskCubit.hasMorePages ? 1 : 0),
                             shrinkWrap: true,
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              return TaskItem(taskModel: tasks[index]);
+                              if (index < tasks.length) {
+                                return TaskItem(taskModel: tasks[index]);
+                              } else {
+                                if (priority == "all") {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 16.h,
+                                    ),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+                                return Container();
+                              }
                             },
                           ),
                         ),
                       ),
-                    if (state.tasks.isEmpty)
+                    if (tasks.isEmpty)
                       Expanded(child: EmptyWidget(title: "No data")),
                   ],
                 );
-              } else if (state is TaskGetAllLoading) {
+              } else if (state is TaskGetAllLoading &&
+                  _taskCubit.currentPage == 1) {
                 return CustomLoadingWidget();
-              } else if (state is TaskGetAllError) {
+              } else if (state is TaskGetAllError &&
+                  _taskCubit.currentPage == 1) {
                 return Center(child: Text(state.error.toString()));
               } else {
                 return Container();

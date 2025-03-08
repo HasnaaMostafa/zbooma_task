@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zbooma_task/core/function/format_date.dart';
 import 'package:zbooma_task/core/static/app_assets.dart';
 import 'package:zbooma_task/core/static/app_styles.dart';
 import 'package:zbooma_task/core/static/icons.dart';
@@ -84,7 +85,7 @@ class TaskItem extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      "30/12/2022",
+                      formatDateHome(taskModel.createdAt ?? DateTime.now()),
                       style: AppStyles.regular12Grey6E.copyWith(
                         color: Color(0xff24252C).withValues(alpha: 0.6),
                       ),

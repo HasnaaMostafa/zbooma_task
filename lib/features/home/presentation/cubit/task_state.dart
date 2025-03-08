@@ -1,6 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:zbooma_task/features/home/data/models/task_model.dart';
 
-abstract class TaskState {}
+abstract class TaskState extends Equatable {
+  const TaskState();
+  @override
+  List<Object> get props => [];
+}
 
 class TaskInitial extends TaskState {}
 
@@ -8,12 +13,31 @@ class TaskGetAllLoading extends TaskState {}
 
 class TaskGetAllSuccess extends TaskState {
   final List<TaskModel> tasks;
-  TaskGetAllSuccess(this.tasks);
+
+  final int currentPage;
+  final bool hasMorePages;
+  const TaskGetAllSuccess({
+    required this.tasks,
+    required this.currentPage,
+    required this.hasMorePages,
+  });
+
+  @override
+  List<Object> get props => [identityHashCode(this)];
+}
+
+class TasksFilteredSuccess extends TaskState {
+  final List<TaskModel> tasks;
+
+  const TasksFilteredSuccess({required this.tasks});
+
+  @override
+  List<Object> get props => [identityHashCode(this)];
 }
 
 class TaskGetAllError extends TaskState {
   final String error;
-  TaskGetAllError({required this.error});
+  const TaskGetAllError({required this.error});
 }
 
 class TaskGetMoreLoading extends TaskState {}
@@ -74,7 +98,7 @@ class TaskDeleteSuccess extends TaskState {
   TaskDeleteSuccess(this.id);
 }
 
-class TaskDeleteError extends TaskState{
+class TaskDeleteError extends TaskState {
   final String error;
 
   TaskDeleteError({required this.error});

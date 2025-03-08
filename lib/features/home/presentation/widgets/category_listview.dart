@@ -5,7 +5,9 @@ import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/widgets/category_item.dart';
 
 class CategoryListView extends StatefulWidget {
-  const CategoryListView({super.key});
+  const CategoryListView({super.key, required this.onChangePriority});
+
+  final Function(String?) onChangePriority;
 
   static const List<String> titles = ["All", "Low", "Medium", "High"];
 
@@ -34,7 +36,12 @@ class _CategoryListViewState extends State<CategoryListView> {
                 setState(() {
                   selectedIndex = index;
                 });
+
                 context.read<TaskCubit>().filterTasksByPriority(
+                  CategoryListView.titles[index].toLowerCase(),
+                );
+
+                widget.onChangePriority(
                   CategoryListView.titles[index].toLowerCase(),
                 );
               },

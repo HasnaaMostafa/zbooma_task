@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zbooma_task/features/home/data/models/task_model.dart';
 import 'package:zbooma_task/features/home/data/repo/task_repo.dart';
@@ -9,68 +11,77 @@ class TaskCubit extends Cubit<TaskState> {
   final TaskRepo taskRepo;
 
   static TaskCubit get(context) => BlocProvider.of(context);
-
-  List<TaskModel> tasks = [];
-  bool isLastPage = false;
+  bool hasMorePages = true;
   int currentPage = 1;
-  Set<String> taskIds = {};
 
-  void getAllTasks({int page = 1, bool loadMore = false}) async {
-    if (!loadMore) {
-      emit(TaskGetAllLoading());
-    } else {
-      emit(TaskGetMoreLoading());
-    }
+List<TaskModel> allTasks = []; 
+List<TaskModel> filteredTasks = []; 
 
-    var response = await taskRepo.getAllTasks(page: page);
+String currentPriority = "all";
 
-    response.fold(
-      (error) {
-        emit(TaskGetAllError(error: error.errMessage.toString()));
-        print(error.errMessage.toString());
-      },
-      (tasksList) {
-        if (loadMore) {
-          if (tasksList.isEmpty) {
-            isLastPage = true;
-          } else {
-            tasks.addAll(tasksList);
-            taskIds.addAll(tasksList.map((task) => task.id ?? ""));
-            currentPage = page;
-          }
-          emit(TaskGetMoreSuccess(tasks));
-        } else {
-          tasks = tasksList;
-          currentPage = page;
-          isLastPage = tasksList.isEmpty;
-          emit(TaskGetAllSuccess(tasks));
-        }
-      },
+Future<void> getAllTasks() async {
+  if (currentPriority != "all" || !hasMorePages) return;
+  
+  if (currentPage == 1) {
+    allTasks.clear();
+    emit(TaskGetAllLoading());
+  }
+
+  final response = await taskRepo.getAllTasks(page: currentPage);
+
+  return response.fold(
+    (error) {
+      emit(TaskGetAllError(error: error.errMessage.toString()));
+      log(error.toString());
+    },
+    (items) {
+      if (items.isEmpty || items.length < 20) {
+        hasMorePages = false;
+      }
+
+      allTasks.addAll(items);
+            if (currentPriority == "all") {
+        filteredTasks = allTasks;
+      } else {
+        filteredTasks = allTasks.where((task) => task.priority == currentPriority).toList();
+      }
+      
+      emit(
+        TaskGetAllSuccess(
+          hasMorePages: currentPriority == "all" ? hasMorePages : false,
+          tasks: filteredTasks,
+          currentPage: currentPage,
+        ),
+      );
+      
+      currentPage++;
+    },
+  );
+}
+
+void filterTasksByPriority(String priority) {
+  currentPriority = priority;
+  
+  if (priority == "all") {
+    filteredTasks = allTasks;
+    emit(
+      TaskGetAllSuccess(
+        tasks: filteredTasks,
+        currentPage: currentPage,
+        hasMorePages: hasMorePages,
+      ),
+    );
+  } else {
+    filteredTasks = allTasks.where((task) => task.priority == priority).toList();
+    emit(
+      TaskGetAllSuccess(
+        tasks: filteredTasks,
+        currentPage: currentPage,
+        hasMorePages: false, 
+      ),
     );
   }
-
-  void loadMoreTasks() {
-    if (!isLastPage) {
-      getAllTasks(page: currentPage + 1, loadMore: true);
-    }
-  }
-
-  void refreshTasks() {
-    currentPage = 1;
-    isLastPage = false;
-    getAllTasks(page: 1);
-  }
-
-  List<TaskModel> filteredTasks = [];
-  void filterTasksByPriority(String priority) {
-    if (priority == "all") {
-      filteredTasks = tasks;
-    } else {
-      filteredTasks = tasks.where((task) => task.priority == priority).toList();
-      print("filtered");
-    }
-    emit(TaskGetAllSuccess(filteredTasks));
-  }
+}
 
   void getTaskById(String id) async {
     emit(TaskGetByIdLoading());
@@ -109,7 +120,7 @@ class TaskCubit extends Cubit<TaskState> {
         emit(TaskCreateError(error: error.errMessage.toString()));
       },
       (createdTask) {
-        tasks.add(createdTask);
+        allTasks.add(createdTask);
         emit(TaskCreateSuccess(createdTask));
       },
     );
@@ -139,9 +150,9 @@ class TaskCubit extends Cubit<TaskState> {
         emit(TaskUpdateError(error: error.errMessage.toString()));
       },
       (updatedTask) {
-        final index = tasks.indexWhere((task) => task.id == updatedTask.id);
+        final index = allTasks.indexWhere((task) => task.id == updatedTask.id);
         if (index != -1) {
-          tasks[index] = updatedTask;
+          allTasks[index] = updatedTask;
         }
 
         emit(TaskUpdateSuccess(updatedTask));
@@ -159,8 +170,8 @@ class TaskCubit extends Cubit<TaskState> {
         emit(TaskDeleteError(error: error.errMessage.toString()));
       },
       (_) {
-        tasks.removeWhere((task) => task.id == id);
-        taskIds.remove(id);
+        allTasks.removeWhere((task) => task.id == id);
+        // taskIds.remove(id);
 
         emit(TaskDeleteSuccess(id));
       },
