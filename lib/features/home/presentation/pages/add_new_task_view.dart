@@ -1,4 +1,4 @@
-import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +16,7 @@ import 'package:zbooma_task/core/utils/widgets/inputs/custom_text_text_field.dar
 import 'package:zbooma_task/core/utils/widgets/inputs/drop_menu_text_field.dart';
 import 'package:zbooma_task/features/home/presentation/cubit/task_cubit.dart';
 import 'package:zbooma_task/features/home/presentation/cubit/task_state.dart';
+import 'package:zbooma_task/features/home/presentation/widgets/image_picker_widget.dart';
 
 class AddNewTaskView extends StatefulWidget {
   const AddNewTaskView({super.key});
@@ -31,12 +32,20 @@ class _AddNewTaskViewState extends State<AddNewTaskView> {
   TextEditingController datecContoller = TextEditingController();
 
   String? priority;
+  String imagePath = "";
 
   @override
   void dispose() {
     titleContoller.dispose();
     descContoller.dispose();
     super.dispose();
+  }
+
+  void _onImagePicked(PlatformFile image) {
+    setState(() {
+      imagePath = image.path ?? "";
+      print(imagePath);
+    });
   }
 
   @override
@@ -52,19 +61,9 @@ class _AddNewTaskViewState extends State<AddNewTaskView> {
             key: formKey,
             child: Column(
               children: [
-                DottedBorder(
-                  borderType: BorderType.RRect,
-                  radius: Radius.circular(12.r),
-                  color: AppColors.primary,
-                  padding: EdgeInsets.symmetric(vertical: 16.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(AppIcons.uploadImgIc),
-                      SizedBox(width: 5.w),
-                      Text("Add Img", style: AppStyles.medium19Primary),
-                    ],
-                  ),
+                ImagePickerWidget(
+                  onImagePicked: _onImagePicked,
+                  initialImagePath: imagePath,
                 ),
                 SizedBox(height: 16.h),
                 CustomTextTextField(
@@ -152,7 +151,7 @@ class _AddNewTaskViewState extends State<AddNewTaskView> {
                               title: titleContoller.text,
                               desc: descContoller.text,
                               priority: priority ?? "",
-                              image: "path.png",
+                              image: imagePath,
                               endDate: date,
                             );
                           }

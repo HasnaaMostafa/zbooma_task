@@ -115,9 +115,7 @@ class _HomeViewState extends State<HomeView> {
                                     padding: EdgeInsets.symmetric(
                                       vertical: 16.h,
                                     ),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
+                                    child: CustomLoadingWidget(),
                                   );
                                 }
                                 return Container();

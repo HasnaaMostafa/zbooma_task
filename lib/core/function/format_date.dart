@@ -18,6 +18,8 @@ String formatDateHome(DateTime date) {
   String year = date.year.toString();
   return "$day/$month/$year";
 }
+
+
 String formatDateFromString(String dateString) {
   try {
     DateTime date = DateTime.parse(dateString);
@@ -26,11 +28,3 @@ String formatDateFromString(String dateString) {
     return "Invalid date format";
   }
 }
-
-/// Example of how to use:
-/// 
-/// // Using with DateTime object
-/// String formattedDate = formatDate(DateTime.now());
-/// 
-/// // Using with ISO string
-/// String formattedFromString = formatDateFromString("2022-12-30T14:30:00Z");
