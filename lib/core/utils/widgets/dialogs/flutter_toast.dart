@@ -6,7 +6,10 @@ void showToast({required String message, required ToastStates state}) =>
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
+      gravity:
+          state == ToastStates.message
+              ? ToastGravity.CENTER
+              : ToastGravity.BOTTOM,
       backgroundColor: chooseToastColor(state),
       textColor: Colors.white,
       fontSize: 15,

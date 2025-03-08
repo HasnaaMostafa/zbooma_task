@@ -87,18 +87,20 @@ class ApiServices {
 
                     request.handler.resolve(retryResponse);
                   } catch (retryError) {
-                    request.handler.reject(
-                      DioException(
-                        requestOptions: request.options,
-                        error: retryError,
-                      ),
-                    );
+                    if (!request.handler.isCompleted) {
+                      request.handler.reject(
+                        DioException(
+                          requestOptions: request.options,
+                          error: retryError,
+                        ),
+                      );
+                    }
                   }
                 }
 
                 _requestQueue.clear();
 
-                return handler.resolve(response);
+                // return handler.resolve(response);
               } catch (refreshError) {
                 if (kDebugMode) {
                   print("Refresh Token Failed: $refreshError");
@@ -113,7 +115,8 @@ class ApiServices {
                 );
               }
             }
-          } else if (e.response.toString().contains("Invalid refresh token")) {
+          } else if (e.response?.statusCode == 403 ||
+              e.response?.statusMessage?.contains("Forbidden") == true) {
             await preferences.deleteToken();
             await preferences.deleteRefreshToken();
             showToast(message: "Login Has Expired", state: ToastStates.message);
@@ -124,7 +127,7 @@ class ApiServices {
             return handler.reject(e);
           }
 
-          return handler.reject(e);
+         
         },
       ),
     );
