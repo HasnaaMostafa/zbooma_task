@@ -159,12 +159,14 @@ class _RegisterViewState extends State<RegisterView> {
                               isLoading: state is AuthLoading,
                               title: "Sign up",
                               onPressed: () {
+                                print(phoneController.text);
+                                print(code);
                                 if (formKey.currentState!.validate()) {
                                   context.read<AuthCubit>().register(
                                     phone:
                                         code == null
-                                            ? "20${phoneController.text}"
-                                            : phoneController.text,
+                                            ? "+20${phoneController.text}"
+                                            : "+$code${phoneController.text}",
                                     password: passwordContoller.text,
                                     name: nameController.text,
                                     experiences: int.parse(
