@@ -15,11 +15,18 @@ class TaskCubit extends Cubit<TaskState> {
   int currentPage = 1;
   List<TaskModel> allTasks = [];
 
+  bool hasMoreFilteredPages = true;
+  int currentFilteredPage = 1;
+  List<TaskModel> filteredTasks = [];
+  String currentPriority = "all";
+
   Future<void> getAllTasks() async {
     if (!hasMorePages) return;
 
     if (currentPage == 1) {
       allTasks.clear();
+      filteredTasks.clear();
+      currentFilteredPage = 1;
       emit(TaskGetAllLoading());
     }
 
@@ -50,12 +57,6 @@ class TaskCubit extends Cubit<TaskState> {
     );
   }
 
-  bool hasMoreFilteredPages = true;
-  int currentFilteredPage = 1;
-  List<TaskModel> filteredTasks = [];
-  String currentPriority = "all";
-
-
   Future<void> getFilteredTasks({
     required String priority,
     bool refresh = false,
@@ -64,6 +65,8 @@ class TaskCubit extends Cubit<TaskState> {
       currentFilteredPage = 1;
       hasMoreFilteredPages = true;
       filteredTasks.clear();
+      allTasks.clear();
+      currentPage = 1;
       currentPriority = priority;
     }
     if (!hasMoreFilteredPages) return;
@@ -77,6 +80,10 @@ class TaskCubit extends Cubit<TaskState> {
       priority: priority,
       page: currentFilteredPage,
     );
+    // log("filteredTasks cleared: ${filteredTasks.length}");
+    // log("allTasks updated: ${filteredTasks.length}");
+    filteredTasks.clear();
+    allTasks.clear();
 
     return response.fold(
       (error) {
@@ -103,16 +110,16 @@ class TaskCubit extends Cubit<TaskState> {
       },
     );
   }
+
   Future<void> refreshFilteredTasks() async {
     if (currentPriority == "all") {
       currentPage = 1;
       hasMorePages = true;
+      allTasks.clear();
+      filteredTasks.clear();
       return getAllTasks();
     } else {
-      return getFilteredTasks(
-        priority: currentPriority,
-        refresh: true,
-      );
+      return getFilteredTasks(priority: currentPriority, refresh: true);
     }
   }
 
@@ -121,6 +128,7 @@ class TaskCubit extends Cubit<TaskState> {
     currentPage = 1;
     hasMorePages = true;
     filteredTasks.clear();
+    allTasks.clear();
     getAllTasks();
   }
 
