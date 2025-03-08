@@ -119,15 +119,16 @@ class ApiServices {
               e.response?.statusMessage?.contains("Forbidden") == true) {
             await preferences.deleteToken();
             await preferences.deleteRefreshToken();
-            showToast(message: "Login Has Expired", state: ToastStates.message);
+            showToast(
+              message: "Login Has Expired",
+              state: ToastStates.loginExpired,
+            );
             navigatorKey.currentState?.pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const LoginView()),
               (route) => false,
             );
             return handler.reject(e);
           }
-
-         
         },
       ),
     );

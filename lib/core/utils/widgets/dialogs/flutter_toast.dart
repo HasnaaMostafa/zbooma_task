@@ -7,7 +7,7 @@ void showToast({required String message, required ToastStates state}) =>
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity:
-          state == ToastStates.message
+          state == ToastStates.loginExpired
               ? ToastGravity.CENTER
               : ToastGravity.BOTTOM,
       backgroundColor: chooseToastColor(state),
@@ -15,7 +15,7 @@ void showToast({required String message, required ToastStates state}) =>
       fontSize: 15,
     );
 
-enum ToastStates { success, error, warning, message, note }
+enum ToastStates { success, error, warning, message, note , loginExpired}
 
 Color chooseToastColor(ToastStates state) {
   Color color;
@@ -38,6 +38,10 @@ Color chooseToastColor(ToastStates state) {
 
     case ToastStates.note:
       color = Colors.grey;
+      break;
+    
+    case ToastStates.loginExpired:
+      color = AppColors.primary;
       break;
   }
   return color;
